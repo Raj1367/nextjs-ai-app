@@ -7,21 +7,28 @@ import { revalidatePath } from "next/cache";
 // Define types
 type AccountData = {
     name: string;
-    balance: number;
+    balance: string | number;
     isDefault?: boolean;
 };
 
 // Serialize transaction helper function
 const serializeTransaction = (obj: any) => {
-    if (!obj) return null;
-    return {
-        ...obj,
-        balance: obj.balance ? obj.balance.toNumber() : 0,
-    };
+
+    const serialzied = { ...obj }
+
+    if (obj.balance) {
+        serialzied.balance = obj.balance.toNumber()
+    }
+
+    if (obj.amount) {
+        serialzied.amount = obj.amount.toNumber()
+    }
+
+    return serialzied
 };
 
 // Create account function
-const createAccount = async (data: AccountData): Promise<{ success: boolean; data?: any; error?: string }> => {
+export const createAccount = async (data: AccountData): Promise<{ success: boolean; data?: any; error?: string }> => {
     try {
         const authData = await auth();
         if (!authData || !authData.userId) throw new Error("Unauthorized");
@@ -76,4 +83,34 @@ const createAccount = async (data: AccountData): Promise<{ success: boolean; dat
     }
 };
 
-export { createAccount };
+export const getuserAccounts = async () => {
+
+    const { userId } = await auth()
+
+    if (!userId) throw new Error("Unauthorized")
+
+    const user = await db.user.findUnique({
+        where: { clerkUserId: userId }
+    })
+
+    if (!user) {
+        throw new Error("User not found")
+    }
+
+    const accounts = await db.account.findMany({
+        where: { userId: user.id },
+        orderBy: { createdAt: "desc" },
+        include: {
+            _count: {
+                select: {
+                    transactions: true
+                }
+            }
+        }
+    })
+
+    const serializedAccount = accounts.map(serializeTransaction);
+
+    return serializedAccount
+
+}
