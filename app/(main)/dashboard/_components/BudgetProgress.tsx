@@ -122,7 +122,7 @@ function BudgetProgress({ initialBudget, currentExpenses }) {
         </div>
       </CardHeader>
       <CardContent>
-        {/* {initialBudget && (
+        {initialBudget && (
           <div className="space-y-2">
             <Progress
               value={percentUsed}
@@ -139,7 +139,7 @@ function BudgetProgress({ initialBudget, currentExpenses }) {
               {percentUsed.toFixed(1)}% used
             </p>
           </div>
-        )} */}
+        )}
       </CardContent>
     </Card>
   );
