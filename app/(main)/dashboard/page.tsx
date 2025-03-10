@@ -1,4 +1,4 @@
-import { getuserAccounts } from "@/actions/dashboard";
+import { getDashboardData, getuserAccounts } from "@/actions/dashboard";
 import CreateAccountDrawer from "@/components/CreateAccountDrawer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus } from "lucide-react";
@@ -9,32 +9,40 @@ import BudgetProgress from "./_components/BudgetProgress";
 
 const DashboardPage = async () => {
 
-    const accounts = await getuserAccounts()
+    const [accounts, transactions] = await Promise.all([
+        getuserAccounts(),
+        getDashboardData(),
+    ]);
 
-    const defaultAccount = accounts?.find((acc) => acc.isDefault)
-    console.log(defaultAccount)
+    const defaultAccount = accounts?.find((account) => account.isDefault);
 
+    // Get budget for default account
     let budgetData = null;
     if (defaultAccount) {
-        budgetData = await getCurrentBudget(defaultAccount.id)
+        budgetData = await getCurrentBudget(defaultAccount.id);
     }
 
     // console.log(accounts)
 
+    console.log(budgetData)
+
+
     return (
-        <div>
-            {/* budget Progress */}
-            {
-                defaultAccount &&
-                < BudgetProgress
-                    initialBudget={budgetData?.budget}
-                    currentExpenses={budgetData?.currExpenses || 0}
-                />
-            }
+        <div className="space-y-8">
+            {/* Budget Progress */}
 
-            {/* Overview */}
+            <BudgetProgress
+                initialBudget={budgetData?.budget}
+                currentExpenses={budgetData?.currentExpenses || 0}
+            />
 
-            {/* Accounts */}
+            {/* Dashboard Overview */}
+            {/* <DashboardOverview
+        accounts={accounts}
+        transactions={transactions || []}
+      /> */}
+
+            {/* Accounts Grid */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <CreateAccountDrawer>
                     <Card className="hover:shadow-md transition-shadow cursor-pointer border-dashed">
@@ -44,10 +52,10 @@ const DashboardPage = async () => {
                         </CardContent>
                     </Card>
                 </CreateAccountDrawer>
-
-                {accounts.length > 0 && accounts?.map((account: any) => {
-                    return <AccountCard key={account.id} account={account} />
-                })}
+                {accounts.length > 0 &&
+                    accounts?.map((account) => (
+                        <AccountCard key={account.id} account={account} />
+                    ))}
             </div>
         </div>
     );
