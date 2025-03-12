@@ -115,7 +115,6 @@ export const getuserAccounts = async () => {
 
 }
 
-
 export async function getDashboardData() {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");

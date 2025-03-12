@@ -1,11 +1,12 @@
 import { serve } from "inngest/next";
-import { inngest } from "../../../inngest/client";
-import { checkBudget } from "@/lib/inngest/functions";
+import { inngest } from "../../../lib/inngest/client";
+import { checkBudgetAlerts } from "@/lib/inngest/functions";
+
 
 // Use the serve function correctly
 const apiHandler = serve({
   client: inngest,
-  functions: [checkBudget]
+  functions: [checkBudgetAlerts]
 });
 
 // Then export the methods if `serve` returns them
