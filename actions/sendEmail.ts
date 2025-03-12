@@ -1,4 +1,4 @@
-
+"user server"
 import { Resend } from "resend";
 
 const sendEmail = async ({to,subject,react}) => {

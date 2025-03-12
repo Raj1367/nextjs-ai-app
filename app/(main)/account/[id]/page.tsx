@@ -21,7 +21,7 @@ const AccountPage: FC<ParamsType> = async ({ params }) => {
 
     return (
         <div className="flex justify-center items-center">
-            <div className="container">
+            <div className="container space-y-6">
                 {/* Account Info */}
                 <div className="flex justify-between items-center gap-4 py-6">
                     <div>
