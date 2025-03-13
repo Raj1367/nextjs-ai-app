@@ -55,7 +55,7 @@ const AccountCard: FC<accountProps> = ({ account }) => {
         <Card className="hover:shadow-md transition-shadow group relative">
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
                 <Link href={`/account/${account.id}`}>
-                    <CardTitle className="capitalize hover:text-blue-500 transition-colors">
+                    <CardTitle title="check all transactions here" className="capitalize group-hover:text-blue-500 transition-colors">
                         {account.name}
                     </CardTitle>
                 </Link>
